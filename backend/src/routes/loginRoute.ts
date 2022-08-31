@@ -1,6 +1,6 @@
 import {Router}  from "express"
-import { loginNuser } from "../controllers/nusercontroller"
-import { loginCuser } from "../controllers/cusercontroller"
+import { loginNuser } from "../controllers/logincontroller"
+import { loginCuser } from "../controllers/logincontroller"
 
 
 

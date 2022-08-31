@@ -79,44 +79,4 @@ export const havingissue = async (req:Request,res:Response) => {
     }
 }
 
-//login user
-export const loginNuser = async (req:Request,res:Response) => {
-    try{
-        const{username,password} = req.body
-        const nuser = await Nuser.findOneBy({username:username})
-        if(!nuser) return res.status(400).json('username or password is wrong')
-
-         const correctPassword: boolean =await nuser.validatePassword(password)
-         if(!correctPassword) return res.status(400).json('invalid password')
-
-        //token
-        const token =jwt.sign({id :nuser.id },process.env.TOKEN_SECRECT || 'tokentest')
-        //res.header('accessToken',token).json(nuser);
-
-
-        const issue = await AppDataSource.getRepository(Issue)
-
-        .createQueryBuilder("issue")
-        .where("issue.nuser = :nuser", {nuser:nuser.id})
-        .andWhere("issue.isDone = :isDone",{ isDone: false })
-        .getRawOne()
-
-        console.log(issue)
-        if(issue){
-            const counter=issue.issue_counterId
-            const queue_num= issue.issue_counterId
-
-            console.log(queue_num)
-            
-            return res.json({'accessToken' :token, 'counter' :issue.issue_counterId,'queue_num' :issue.issue_queueNo})
-
-        }
-        return res.json({'accessToken':token})
-
-    }catch (error) {
-        return res.status(500).json ({
-            message:error.message
-        })
-    }
-}
  

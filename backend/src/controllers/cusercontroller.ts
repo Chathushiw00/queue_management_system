@@ -87,76 +87,7 @@ export const deleteCusers = async (req:Request,res:Response) => {
     }
 } */
 
-export const loginCuser = async (req:Request,res:Response) => {
 
-    try{
-        const{username,password} = req.body
-        const cuser = await Cuser.findOneBy({username:username})
-        if(!cuser) return res.status(400).json('username or password is wrong')
-
-        const correctPassword: boolean = await cuser.validatePassword(password)
-        if(!correctPassword) return res.status(400).json('invalid password')
-
-        //counter info
-
-        const counterinfo = await AppDataSource.getRepository(Counter)
-
-        .createQueryBuilder("counter")
-        .where("counter.cuser = :cuser", { cuser: cuser.id})
-        .andWhere("counter.isOnline = :online", { online: 0 })
-        .getOne()
-
-        if(!counterinfo){
-
-            const newcounter = await AppDataSource.getRepository(Counter)
-
-            .createQueryBuilder("counter")
-            .where("counter.isOnline = :online", {online: 0 })
-            .getOne()
-
-            if(!newcounter) return res.json({'message': 'no counter available'})
-
-            const updateCounter = await AppDataSource
-            .createQueryBuilder()
-            .update(Counter)
-            .set({
-                cuser : cuser, //user or cuser check
-                isOnline : true
-                })
-            .where("id = :counter", {counter: newcounter.id})
-            .execute()
-
-            newcounter.isOnline= true
-
-            const token = jwt.sign({id :cuser.id}, process.env.TOKEN_SECRECT || 'tokentest')
-
-        return res.json({'accessToken':token,'counterinfo': newcounter})
-            
-        }else{
-            
-            const updateCounter = await AppDataSource
-            .createQueryBuilder()
-            .update(Counter)
-            .set({
-                cuser:cuser, //check user or cuser
-                isOnline : true
-                })
-            .where("id = :counter", {counter: counterinfo.id})
-            .execute()
-
-            const token= jwt.sign({id :cuser.id }, process.env.TOKEN_SECRET|| 'tokentest')
-
-                return res.json({'accessToken':token,'counterinfo':counterinfo})
-        }
-       
-
-    }catch (error) {
-        
-        return res.status(500).json({
-        
-         })
-    }
-} 
 
 export const counterclose =async (req:Request,res:Response) =>{
     
