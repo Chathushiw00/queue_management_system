@@ -14,9 +14,8 @@ import counterUserRouter from "./routes/counterUserRoutes"
 import normalUserRouter from "./routes/normalUserRoutes"
 import { ValidateToken } from "./libs/verifyToken"
 import { Server } from 'socket.io'
-import { appendFile } from "fs"
-import { userInfo } from 'os'
-import {getcurrentnext2,getcurrentnext3,getcurrentnext4} from './controllers/cusercontroller'
+import {getcurrentnext1,getcurrentnext2,getcurrentnext3} from './controllers/cusercontroller'
+const cookieParser = require('cookie-parser')
 
 
 dotenv.config();
@@ -43,6 +42,7 @@ export const AppDataSource = new DataSource({
  app.use(express.json())
  app.use(Cors())
  app.use(express.urlencoded({extended: true}))
+ app.use(cookieParser())
  
 
  //routes
@@ -50,18 +50,12 @@ export const AppDataSource = new DataSource({
 //login router
 app.use('/', loginRouter)
 
-/* loginRouter my
-//nuser routes
-router.post('/nuser/login',loginNuser)
-
-//cuser routes
-router.post('/cuser/login',loginCuser) */
-
-
-//counteruser routes
+//loginRouter my
+//counterUserRouter routes
 app.use('/cuser',ValidateToken,counterUserRouter)
-//normaluser routes
-app.use('/nuser',ValidateToken,normalUserRouter)
+
+//normalUserRouter routes
+app.use('/nuser',ValidateToken,normalUserRouter) 
 
 
  
@@ -73,8 +67,8 @@ AppDataSource.initialize()
     })
     .catch((error) => console.log(error))
 
-//socket.io
 
+//socket.io
 export const io = new Server(server,{cors: {origin: "http://localhost:3000"}})
 
 let onlineUsers: any = []
@@ -83,26 +77,30 @@ const addNewUser = (username:any, socketId:any) => {
   !onlineUsers.some((user:any) => user.username === username) && onlineUsers.push({ username, socketId })
 }
 
+
+//remove user
+const removeUser = (socketId:any) => {
+  onlineUsers = onlineUsers.filter((user:any) => user.socketId !== socketId)
+}
+
+
 const getUser = (username:any) => {
   return onlineUsers.find((user:any) => user.username === username)
 }
 
   io.on("connection",(socket) => {
 
-      //add new user
 
+      //add new user
       socket.on("newUser", (username) => {
         addNewUser(username, socket.id)
       })
+      
       console.log('online users',onlineUsers)
 
-      //remove user
-      const removeUser = (socketId:any) => {
-        onlineUsers = onlineUsers.filter((user:any) => user.socketId !== socketId)
-      }
 
       //send notifications
-      socket.on("sendNotification", ({ receiverName, type,id }) => {
+      socket.on("sendNotification", ({ receiverName, type, id }) => {
         const receiver = getUser(receiverName)
         console.log(getUser(receiverName))
 
@@ -112,18 +110,19 @@ const getUser = (username:any) => {
         })
       })
 
+      
       //setInterval
       setInterval(function(){
       
-            getcurrentnext2().then((Counter) => {
+            getcurrentnext1().then((Counter) => {
                 io.emit('getqueuenum1', Counter)            
             })
   
-            getcurrentnext3().then((Counter) => {
+            getcurrentnext2().then((Counter) => {
                 io.emit('getqueuenum2', Counter)            
             })
   
-            getcurrentnext4().then((Counter) => {
+            getcurrentnext3().then((Counter) => {
                 io.emit('getqueuenum3', Counter)           
             })
             

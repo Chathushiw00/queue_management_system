@@ -21,6 +21,7 @@ const normalUserRoutes_1 = __importDefault(require("./routes/normalUserRoutes"))
 const verifyToken_1 = require("./libs/verifyToken");
 const socket_io_1 = require("socket.io");
 const cusercontroller_1 = require("./controllers/cusercontroller");
+const cookieParser = require('cookie-parser');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
@@ -38,6 +39,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use('/', loginRoute_1.default);
 app.use('/cuser', verifyToken_1.ValidateToken, counterUserRoutes_1.default);
 app.use('/nuser', verifyToken_1.ValidateToken, normalUserRoutes_1.default);
@@ -51,6 +53,9 @@ let onlineUsers = [];
 const addNewUser = (username, socketId) => {
     !onlineUsers.some((user) => user.username === username) && onlineUsers.push({ username, socketId });
 };
+const removeUser = (socketId) => {
+    onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
 const getUser = (username) => {
     return onlineUsers.find((user) => user.username === username);
 };
@@ -59,9 +64,6 @@ exports.io.on("connection", (socket) => {
         addNewUser(username, socket.id);
     });
     console.log('online users', onlineUsers);
-    const removeUser = (socketId) => {
-        onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
-    };
     socket.on("sendNotification", ({ receiverName, type, id }) => {
         const receiver = getUser(receiverName);
         console.log(getUser(receiverName));
@@ -71,13 +73,13 @@ exports.io.on("connection", (socket) => {
         });
     });
     setInterval(function () {
-        (0, cusercontroller_1.getcurrentnext2)().then((Counter) => {
+        (0, cusercontroller_1.getcurrentnext1)().then((Counter) => {
             exports.io.emit('getqueuenum1', Counter);
         });
-        (0, cusercontroller_1.getcurrentnext3)().then((Counter) => {
+        (0, cusercontroller_1.getcurrentnext2)().then((Counter) => {
             exports.io.emit('getqueuenum2', Counter);
         });
-        (0, cusercontroller_1.getcurrentnext4)().then((Counter) => {
+        (0, cusercontroller_1.getcurrentnext3)().then((Counter) => {
             exports.io.emit('getqueuenum3', Counter);
         });
     }, 1000);

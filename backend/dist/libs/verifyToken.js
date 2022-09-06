@@ -6,8 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidateToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ValidateToken = (req, res, next) => {
+    const accToken = req.cookies.jwt;
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
+    if (accToken != token)
+        return res.status(403).send({ message: 'Invalid Access Token' });
     if (!token)
         return res.status(401).json('Access denied');
     const payload = jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET || 'tokentest');

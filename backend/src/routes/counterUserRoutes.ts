@@ -1,5 +1,5 @@
 import {Router}  from "express"
-import {getcounterissues,getsingleissue,issuecalled,issuedone,getnextissue,nextissuecalled} from "../controllers/issuecontroller"
+import {getcounterissues,getsingleissue,issuecalled,issuedone,getDoneNextissue} from "../controllers/issuecontroller"
 import {counterclose} from "../controllers/cusercontroller"
 
 const router = Router();
@@ -12,10 +12,8 @@ router.get('/issue/:id',getsingleissue); //done
 
 router.get('/issuedone/:id',issuedone); //done
 
-router.put('/nextissuecalled/:id',nextissuecalled); //check
+router.put('/getnextissue/:id',getDoneNextissue); //work-done
 
-router.put('/getnextissue/:id',getnextissue); //check
-
-router.put('/counterclose',counterclose); //done
+router.get('/counterclose',counterclose); //done
 
 export default router;    

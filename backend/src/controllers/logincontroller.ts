@@ -22,6 +22,7 @@ export const loginNuser = async (req:Request,res:Response) => {
         //res.header('accessToken',token).json(nuser);
 
 
+        //ISSUE INFO
         const issue = await AppDataSource.getRepository(Issue)
 
         .createQueryBuilder("issue")
@@ -36,9 +37,11 @@ export const loginNuser = async (req:Request,res:Response) => {
 
             console.log(queue_num)
             
-            return res.json({'accessToken' :token, 'counter' :issue.issue_counterId,'queue_num' :issue.issue_queueNo})
+            res.cookie('jwt',token,{httpOnly:true, maxAge: 3 * 24 * 60 * 60 * 1000 })
+            return res.json({'accessToken':token, 'counter' :issue.issue_counterId,'queue_num' :issue.issue_queueNo})
 
         }
+        res.cookie('jwt', token, {httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000})
         return res.json({'accessToken':token})
 
     }catch (error) {
@@ -93,6 +96,10 @@ export const loginCuser = async (req:Request,res:Response) => {
 
             const token = jwt.sign({id :cuser.id}, process.env.TOKEN_SECRECT || 'tokentest')
 
+            res.cookie('jwt', token, {httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000})
+
+            req.body.counterId = newcounter.id //check counteeId
+
         return res.json({'accessToken':token,'counterinfo': newcounter})
             
         }else{
@@ -109,10 +116,14 @@ export const loginCuser = async (req:Request,res:Response) => {
 
             const token= jwt.sign({id :cuser.id }, process.env.TOKEN_SECRET|| 'tokentest')
 
-                return res.json({'accessToken':token,'counterinfo':counterinfo})
+            res.cookie('jwt', token, {httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000})
+
+            req.body.counterId = counterinfo.id
+
+            return res.json({'accessToken':token,'counterinfo':counterinfo})
+
         }
        
-
     }catch (error) {
         
         return res.status(500).json({

@@ -7,7 +7,7 @@ import { loginCuser } from "../controllers/logincontroller"
 const router = Router()
 
 //nuser routes
-router.post('/nuser/login',loginNuser) //done
+router.post('/nuser/login',loginNuser) //done 
 
 //cuser routes
 router.post('/cuser/login',loginCuser) //done

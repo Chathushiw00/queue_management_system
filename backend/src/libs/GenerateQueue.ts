@@ -5,7 +5,7 @@ import { AppDataSource } from "../index"
 import { Counter } from '../models/Counter'
 
 
-export const GenarateQueueNum = async ( req:Request, res:Response, next:NextFunction) => {
+export const genarateQueueNum = async ( req:Request, res:Response, next:NextFunction) => {
 
     try{
         const countissue:number[]=[];
@@ -57,11 +57,11 @@ export const GenarateQueueNum = async ( req:Request, res:Response, next:NextFunc
                 return  res.status(500).json({message:'No counter available'})
             }
 
-                if(a<b && a<c)
+                if(a<=b && a<=c)
                 {    
                     freequeue=1
 
-                }else if(b<c){
+                }else if(b<=c){
 
                     freequeue=2
 

@@ -1,8 +1,9 @@
 import { Request,Response } from "express"
 import { AppDataSource } from "../index"
 import { Cuser } from "../models/Cuser"
-import jwt, { JsonWebTokenError } from "jsonwebtoken"
+import { Issue } from "../models/Issue"
 import { Counter } from "../models/Counter"
+import { getNodeMajorVersion } from "typescript"
 
 
 
@@ -93,25 +94,138 @@ export const counterclose =async (req:Request,res:Response) =>{
     
     try {
      
-       
-       const counterRepository = await AppDataSource.getRepository(Counter) 
-         
-              .createQueryBuilder("counter")
-              .update(Counter)
-              .set({ isOnline: false })
-              .where("cuser = :cuser", { cuser: req.body.userId })
-              .execute()
+        const cuserIdentify = req.body.userId
 
-               
-              res.json({message:"Counter closed"})
+        const skipcounter = await AppDataSource.getRepository(Counter)
+        .createQueryBuilder("counter")
+        .where("counter.cuser = :cuser", { cuser: cuserIdentify })
+        .getOne()
+
+       
+        const counterRepository = await AppDataSource.getRepository(Counter) 
+        .createQueryBuilder("counter")
+        .update(Counter)
+        .set({ isOnline: false })
+        .where("cuser = :cuser", { cuser: cuserIdentify }) //try with counter.userId = :cuser aswell
+        .execute()
+
+        let countissue: number[] =[]
+        
+        for(let i = 1; i <= 3; i++)
+        {
+            const checkcounter = await AppDataSource.getRepository(Counter)
+            .createQueryBuilder("counter")
+            .where("id = :id",{id: i})
+            .getOne()
+
+            let conline : boolean = checkcounter!.isOnline
+
+            if(conline) {
+                
+                const checkissues = await AppDataSource.getRepository(Issue) 
+                .createQueryBuilder("issue")
+                .select("COUNT(issue.id)","count")
+                .where("issue.counter = :counter", { counter: i })
+                .andWhere("issue.isDone = :isDone", { isDone: false })
+                .getRawOne()
+
+                countissue[i-1]=checkissues.count 
+                
+            }else{
+                countissue[i-1]=Infinity
+            }
+        }
+
+        let freequeue:number=0;
+
+        let a: number = countissue[0]
+        let b: number = countissue[1]
+        let c: number = countissue[2] 
+
+        if((a==Infinity && b==Infinity && c==Infinity)){
+            return  res.status(500).json({message:'No counter available'})
+        }
+  
+        if(a<=b && a<=c)
+        {    
+            freequeue=1
+
+        }else if(b<=c){
+
+            freequeue=2
+
+        }else{
+            freequeue=3
+        }  
+        
+        const freeCounter = await Counter.findOne({where:{id: freequeue}})
+
+        const changingIssues = await AppDataSource.getRepository(Issue)
+        .createQueryBuilder("issue")
+        .where("issue.counterId = :id",{id: skipcounter?.id})
+        .andWhere("issue.isDone = :done",{done: false})
+        .getManyAndCount()
+
+        console.log(changingIssues)
+
+        for(let n=0; n< changingIssues[1]; n++){
+
+            let issueIdentity = changingIssues[0][n].id
+
+            const issueRepository = await AppDataSource.getRepository(Issue) 
+            .createQueryBuilder("issue")
+            .select("MAX(issue.queueNo)","max")
+            .where("issue.counter = :counter", { counter: freequeue })
+            .getRawOne()
+        
+            if(issueRepository.max==null){
+
+                issueRepository.max =1
+
+            }else{
+                issueRepository.max+=1;
+            } 
+
+            const updateIssue = await AppDataSource.getRepository(Issue)
+            .createQueryBuilder("issue")
+            .update(Issue)
+            .set({queueNo: issueRepository.max, counter: freeCounter! })
+            .where("issue.id = :isId",{isId : issueIdentity}) //ask
+            .execute()
+        }
+
+        res.cookie('jwt','',{maxAge: 1})
+        req.body.userId = null
+
+        return res.json({message:"Counter closed"})
      
-    
+
          } catch (error) {
      
-            res.status(500).json({message:error.message})
+           return  res.status(500).json({message:error.message})
          }
-     
  }
+
+
+export const getcurrentnext1 = async (): Promise<Counter[]> =>{
+
+    try{
+
+        const issueRepository = await AppDataSource.getRepository(Counter)
+
+        .createQueryBuilder("counter")
+        .where("counter.id = :id", {id: 1})
+        .getRawOne();
+
+        return(issueRepository)
+
+    }catch (error) {
+
+        return[]
+
+    }
+ 
+}
 
 
 export const getcurrentnext2 = async (): Promise<Counter[]> =>{
@@ -131,9 +245,8 @@ export const getcurrentnext2 = async (): Promise<Counter[]> =>{
         return[]
 
     }
- 
+  
 }
-
 
 export const getcurrentnext3 = async (): Promise<Counter[]> =>{
 
@@ -143,26 +256,6 @@ export const getcurrentnext3 = async (): Promise<Counter[]> =>{
 
         .createQueryBuilder("counter")
         .where("counter.id = :id", {id: 3})
-        .getRawOne();
-
-        return(issueRepository)
-
-    }catch (error) {
-
-        return[]
-
-    }
-  
-}
-
-export const getcurrentnext4 = async (): Promise<Counter[]> =>{
-
-    try{
-
-        const issueRepository = await AppDataSource.getRepository(Counter)
-
-        .createQueryBuilder("counter")
-        .where("counter.id = :id", {id: 4})
         .getRawOne()
 
         return(issueRepository)

@@ -39,8 +39,10 @@ const loginNuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             const counter = issue.issue_counterId;
             const queue_num = issue.issue_counterId;
             console.log(queue_num);
+            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
             return res.json({ 'accessToken': token, 'counter': issue.issue_counterId, 'queue_num': issue.issue_queueNo });
         }
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
         return res.json({ 'accessToken': token });
     }
     catch (error) {
@@ -82,6 +84,8 @@ const loginCuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 .execute();
             newcounter.isOnline = true;
             const token = jsonwebtoken_1.default.sign({ id: cuser.id }, process.env.TOKEN_SECRECT || 'tokentest');
+            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
+            req.body.counterId = newcounter.id;
             return res.json({ 'accessToken': token, 'counterinfo': newcounter });
         }
         else {
@@ -95,6 +99,8 @@ const loginCuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 .where("id = :counter", { counter: counterinfo.id })
                 .execute();
             const token = jsonwebtoken_1.default.sign({ id: cuser.id }, process.env.TOKEN_SECRET || 'tokentest');
+            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
+            req.body.counterId = counterinfo.id;
             return res.json({ 'accessToken': token, 'counterinfo': counterinfo });
         }
     }
