@@ -12,4 +12,4 @@ router.get('/getQueueDetails', issuecontroller_1.getissueQDetails);
 router.delete('/cancelissue', issuecontroller_1.cancelissue);
 router.get('/getnotifications', notificationcontroller_1.getNotifications);
 exports.default = router;
-//# sourceMappingURL=normalUserRoutes.js.map
+//# sourceMappingURL=NuserRoutes.js.map

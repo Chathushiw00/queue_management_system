@@ -16,8 +16,8 @@ const Notification_1 = require("./models/Notification");
 const Issue_1 = require("./models/Issue");
 const Counter_1 = require("./models/Counter");
 const loginRoute_1 = __importDefault(require("./routes/loginRoute"));
-const counterUserRoutes_1 = __importDefault(require("./routes/counterUserRoutes"));
-const normalUserRoutes_1 = __importDefault(require("./routes/normalUserRoutes"));
+const CuserRoutes_1 = __importDefault(require("./routes/CuserRoutes"));
+const NuserRoutes_1 = __importDefault(require("./routes/NuserRoutes"));
 const verifyToken_1 = require("./libs/verifyToken");
 const socket_io_1 = require("socket.io");
 const cusercontroller_1 = require("./controllers/cusercontroller");
@@ -41,8 +41,8 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', loginRoute_1.default);
-app.use('/cuser', verifyToken_1.ValidateToken, counterUserRoutes_1.default);
-app.use('/nuser', verifyToken_1.ValidateToken, normalUserRoutes_1.default);
+app.use('/cuser', verifyToken_1.ValidateToken, CuserRoutes_1.default);
+app.use('/nuser', verifyToken_1.ValidateToken, NuserRoutes_1.default);
 exports.AppDataSource.initialize()
     .then(() => {
     console.log('db connected');

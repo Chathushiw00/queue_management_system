@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDoneNextissue = exports.issuedone = exports.issuecalled = exports.getsingleissue = exports.getcounterissues = exports.cancelissue = exports.getissueDetails = exports.createissue = void 0;
+exports.getDoneNextissue = exports.issuedone = exports.issuecalled = exports.getsingleissue = exports.getcounterissues = exports.cancelissue = exports.getissueQDetails = exports.createissue = void 0;
 const index_1 = require("../index");
 const Issue_1 = require("../models/Issue");
 const Counter_1 = require("../models/Counter");
@@ -33,7 +33,7 @@ const createissue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.createissue = createissue;
-const getissueDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getissueQDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const issueRepository = yield index_1.AppDataSource.getRepository(Issue_1.Issue)
             .createQueryBuilder("issue")
@@ -65,7 +65,7 @@ const getissueDetails = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(500).json({ message: error.message });
     }
 });
-exports.getissueDetails = getissueDetails;
+exports.getissueQDetails = getissueQDetails;
 const cancelissue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield Issue_1.Issue.delete({ nuser: req.body.userId });

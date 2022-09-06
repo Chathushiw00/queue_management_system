@@ -31,7 +31,7 @@ export const createissue = async (req:Request,res:Response) => {
 
 
 
-export const getissueDetails =async (req:Request,res:Response) =>{
+export const getissueQDetails =async (req:Request,res:Response) =>{
 
     try{
 

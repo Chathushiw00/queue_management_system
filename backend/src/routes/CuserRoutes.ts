@@ -12,7 +12,7 @@ router.get('/issue/:id',getsingleissue); //done
 
 router.get('/issuedone/:id',issuedone); //done
 
-router.put('/getnextissue/:id',getDoneNextissue); //work-done
+router.put('/getDoneNextissue/:id',getDoneNextissue); //work-done
 
 router.get('/counterclose',counterclose); //done
 

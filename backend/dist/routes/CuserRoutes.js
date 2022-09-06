@@ -11,4 +11,4 @@ router.get('/issuedone/:id', issuecontroller_1.issuedone);
 router.put('/getDoneNextissue/:id', issuecontroller_1.getDoneNextissue);
 router.get('/counterclose', cusercontroller_1.counterclose);
 exports.default = router;
-//# sourceMappingURL=counterUserRoutes.js.map
+//# sourceMappingURL=CuserRoutes.js.map

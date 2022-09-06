@@ -10,8 +10,8 @@ import { Notification } from "./models/Notification"
 import { Issue } from "./models/Issue"
 import { Counter } from "./models/Counter"
 import loginRouter from "./routes/loginRoute"
-import counterUserRouter from "./routes/counterUserRoutes"
-import normalUserRouter from "./routes/normalUserRoutes"
+import CuserRouter from "./routes/CuserRoutes"
+import NuserRouter from "./routes/NuserRoutes"
 import { ValidateToken } from "./libs/verifyToken"
 import { Server } from 'socket.io'
 import {getcurrentnext1,getcurrentnext2,getcurrentnext3} from './controllers/cusercontroller'
@@ -52,10 +52,10 @@ app.use('/', loginRouter)
 
 //loginRouter my
 //counterUserRouter routes
-app.use('/cuser',ValidateToken,counterUserRouter)
+app.use('/cuser',ValidateToken,CuserRouter)
 
 //normalUserRouter routes
-app.use('/nuser',ValidateToken,normalUserRouter) 
+app.use('/nuser',ValidateToken,NuserRouter) 
 
 
  
