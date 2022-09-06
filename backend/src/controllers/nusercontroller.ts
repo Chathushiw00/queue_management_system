@@ -7,7 +7,7 @@ import { Counter } from "../models/Counter"
 
 
 
-/* export const createNuser = async (req:Request,res:Response) => {
+export const createNuser = async (req:Request,res:Response) => {
 
     try{
 
@@ -51,7 +51,7 @@ export const getNuser = async (req:Request,res:Response) => {
 
         //res.status(500).json({message:error.message})
     }
-} */
+} 
 
 export const havingissue = async (req:Request,res:Response) => {
     try{

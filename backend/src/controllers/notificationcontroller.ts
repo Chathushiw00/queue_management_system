@@ -4,6 +4,14 @@ import { Issue } from "../models/Issue"
 import { Notification } from "../models/Notification"
 
 
+export class NotificationY {
+    async handle(req:Request,res:Response){
+       
+  
+         res.send('Hello!! Mister You are the next get ready');
+    }
+  } 
+
 
 export const getNotifications = async (req:Request, res:Response) => {
 

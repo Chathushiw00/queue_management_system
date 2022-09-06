@@ -5,6 +5,46 @@ import { Counter } from "../models/Counter"
 import { Notification } from "../models/Notification"
 
 
+export class NotificationY {
+    async handle(req:Request,res:Response){
+       
+  
+         res.send('Hello!! Mister You are the next get ready');
+    }
+  } 
+  
+
+  export const doneandnext =async (req:Request,res:Response) =>{
+    
+    try {
+    
+        const {id}= req.params;
+         //req.body.isCalled="true";
+        const user = await Issue.findOneBy({id: parseInt(req.params.id)})
+ 
+        if(!user)  return res.status(404).json({ message: "issue does not exists"});
+ 
+        
+               const issueRepository = await AppDataSource.getRepository(Issue)
+                .createQueryBuilder()
+                .update(Issue)
+                .set({ isDone: true })
+                .where("id = :id", { id: id })
+                .execute();
+ 
+                const getnext = await AppDataSource.getRepository(Issue)
+                .createQueryBuilder("Issue")
+                .where("id = :id", { id: id })
+                .getOne();
+ 
+                return res.json(getnext);
+ 
+     } catch (error) {
+ 
+       return res.status(500).json({message:error.message})
+     }
+} 
+
 
 export const createissue = async (req:Request,res:Response) => {
     try{
@@ -347,9 +387,6 @@ export const getDoneNextissue = async (req:Request,res:Response) => {
       
 }
      
-
-
-
 
 
 /* export class NotificationY {

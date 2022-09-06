@@ -5,6 +5,63 @@ import { AppDataSource } from "../index"
 import { Counter } from '../models/Counter'
 
 
+  
+    //   const xwer = "select * from user";
+
+    //   const { sum } = await getRepository(User)
+    // .createQueryBuilder("user")
+    // .select("SUM(user.nuser)", "sum")
+    // .where("user.id = :id", { id: 1 })
+    // .getRawOne();
+
+    // console.log(sum);
+
+
+  //#id  //QueueId CountID
+ //1        // 1    1
+ //2       // 1     2
+ //2        // 1     3
+ //2       // 2      1
+ //2       // 2      2
+ //2       // 2      3
+ //2       // 3      1
+ //2       // 3      2
+ //2       // 3      3
+
+ 
+
+ // counter_id 1 | 
+  // counter_id 2 | 
+   // counter_id 3 | 
+
+
+//new issue no = 2+1
+
+
+/*const {Countersum}  = await AppDataSource.getRepository(Countern)
+.createQueryBuilder("countern")
+.select("counter_id","Countersum")
+.orderBy("id","DESC")
+.limit(1)
+
+// .where("issue.id = :id", { id: 1 })
+.getRawOne();
+
+console.log("****Count_Id",Countersum);
+
+
+ const Countersumm = parseInt(Countersum);
+
+// const adddone = 1;*/
+
+
+
+// const counter_nub = Countersumm + adddone;
+// const counter_nubb =counter_nub.toString();
+// console.log("****Count**ID",counter_nubb);
+// const counter_nubbb = parseInt(counter_nubb);
+
+
 export const genarateQueueNum = async ( req:Request, res:Response, next:NextFunction) => {
 
     try{

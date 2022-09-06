@@ -4,10 +4,11 @@ import { Cuser } from "../models/Cuser"
 import { Issue } from "../models/Issue"
 import { Counter } from "../models/Counter"
 import { getNodeMajorVersion } from "typescript"
+import jwt from "jsonwebtoken";
 
 
 
-/* export const createCuser = async (req:Request,res:Response) => {
+ export const createCuser = async (req:Request,res:Response) => {
 
     try{
         const{username,password} =req.body
@@ -86,7 +87,7 @@ export const deleteCusers = async (req:Request,res:Response) => {
             //message:error.message
         })
     }
-} */
+} 
 
 
 

@@ -112,7 +112,7 @@ const getUser = (username:any) => {
 
       
       //setInterval
-      setInterval(function(){
+   /*    setInterval(function(){
       
             getcurrentnext1().then((Counter) => {
                 io.emit('getqueuenum1', Counter)            
@@ -126,7 +126,7 @@ const getUser = (username:any) => {
                 io.emit('getqueuenum3', Counter)           
             })
             
-        }, 1000)
+        }, 1000) */
         
         socket.on('disconnect',()=>{
             removeUser(socket.id);
