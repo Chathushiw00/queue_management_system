@@ -9,10 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNotifications = void 0;
+exports.getNotifications = exports.NotificationY = void 0;
 const index_1 = require("../index");
 const Issue_1 = require("../models/Issue");
 const Notification_1 = require("../models/Notification");
+class NotificationY {
+    handle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            res.send('Hello!! Mister You are the next get ready');
+        });
+    }
+}
+exports.NotificationY = NotificationY;
 const getNotifications = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentIssue = yield index_1.AppDataSource.getRepository(Issue_1.Issue)

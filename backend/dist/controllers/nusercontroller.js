@@ -8,10 +8,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.havingissue = void 0;
+exports.havingissue = exports.getNuser = exports.getNusers = exports.createNuser = void 0;
 const index_1 = require("../index");
 const Issue_1 = require("../models/Issue");
+const Nuser_1 = require("../models/Nuser");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const createNuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { username, password } = req.body;
+        const cuser = new Nuser_1.Nuser();
+        cuser.username = username;
+        cuser.password = password;
+        cuser.password = yield cuser.encryptPassword(cuser.password);
+        const saveduser = yield cuser.save();
+        const token = jsonwebtoken_1.default.sign({ id: saveduser.id }, process.env.TOKEN_SECRECT || 'tokentest');
+        res.header('auth-token', token).json(saveduser);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.createNuser = createNuser;
+const getNusers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const nusers = yield Nuser_1.Nuser.find();
+        res.json(nusers);
+    }
+    catch (error) {
+    }
+});
+exports.getNusers = getNusers;
+const getNuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const cuser = yield Nuser_1.Nuser.findOneBy({ id: parseInt(id) });
+        res.json(cuser);
+    }
+    catch (error) {
+    }
+});
+exports.getNuser = getNuser;
 const havingissue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.body.userId;

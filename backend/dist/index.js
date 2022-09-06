@@ -20,7 +20,6 @@ const CuserRoutes_1 = __importDefault(require("./routes/CuserRoutes"));
 const NuserRoutes_1 = __importDefault(require("./routes/NuserRoutes"));
 const verifyToken_1 = require("./libs/verifyToken");
 const socket_io_1 = require("socket.io");
-const cusercontroller_1 = require("./controllers/cusercontroller");
 const cookieParser = require('cookie-parser');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -72,17 +71,6 @@ exports.io.on("connection", (socket) => {
             type
         });
     });
-    setInterval(function () {
-        (0, cusercontroller_1.getcurrentnext1)().then((Counter) => {
-            exports.io.emit('getqueuenum1', Counter);
-        });
-        (0, cusercontroller_1.getcurrentnext2)().then((Counter) => {
-            exports.io.emit('getqueuenum2', Counter);
-        });
-        (0, cusercontroller_1.getcurrentnext3)().then((Counter) => {
-            exports.io.emit('getqueuenum3', Counter);
-        });
-    }, 1000);
     socket.on('disconnect', () => {
         removeUser(socket.id);
     });

@@ -9,11 +9,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDoneNextissue = exports.issuedone = exports.issuecalled = exports.getsingleissue = exports.getcounterissues = exports.cancelissue = exports.getissueQDetails = exports.createissue = void 0;
+exports.getDoneNextissue = exports.issuedone = exports.issuecalled = exports.getsingleissue = exports.getcounterissues = exports.cancelissue = exports.getissueQDetails = exports.createissue = exports.doneandnext = exports.NotificationY = void 0;
 const index_1 = require("../index");
 const Issue_1 = require("../models/Issue");
 const Counter_1 = require("../models/Counter");
 const Notification_1 = require("../models/Notification");
+class NotificationY {
+    handle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            res.send('Hello!! Mister You are the next get ready');
+        });
+    }
+}
+exports.NotificationY = NotificationY;
+const doneandnext = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const user = yield Issue_1.Issue.findOneBy({ id: parseInt(req.params.id) });
+        if (!user)
+            return res.status(404).json({ message: "issue does not exists" });
+        const issueRepository = yield index_1.AppDataSource.getRepository(Issue_1.Issue)
+            .createQueryBuilder()
+            .update(Issue_1.Issue)
+            .set({ isDone: true })
+            .where("id = :id", { id: id })
+            .execute();
+        const getnext = yield index_1.AppDataSource.getRepository(Issue_1.Issue)
+            .createQueryBuilder("Issue")
+            .where("id = :id", { id: id })
+            .getOne();
+        return res.json(getnext);
+    }
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+});
+exports.doneandnext = doneandnext;
 const createissue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let { name, contact, email, issue, counter, userId, queueNo } = req.body;
