@@ -9,12 +9,14 @@ import { Cuser } from "./models/Cuser"
 import { Notification } from "./models/Notification" 
 import { Issue } from "./models/Issue"
 import { Counter } from "./models/Counter"
+import {getcurr_next1,getcurr_next2,getcurr_next3} from './controllers/cusercontroller'
 import loginRouter from "./routes/loginRoute"
 import CuserRouter from "./routes/CuserRoutes"
 import NuserRouter from "./routes/NuserRoutes"
 import { ValidateToken } from "./libs/verifyToken"
 import { Server } from 'socket.io'
-import {getcurrentnext1,getcurrentnext2,getcurrentnext3} from './controllers/cusercontroller'
+
+
 const cookieParser = require('cookie-parser')
 
 
@@ -25,7 +27,7 @@ const app = express()
 
 const server = http.createServer(app)
 
-//db config typeorm
+// typeorm db configuration
 export const AppDataSource = new DataSource({
     type: "mysql",
     host: "localhost",
@@ -59,7 +61,7 @@ app.use('/nuser',ValidateToken,NuserRouter)
 
 
  
-//initialize
+//initialization
 AppDataSource.initialize()
     .then(() => {
       console.log('db connected')
@@ -73,8 +75,10 @@ export const io = new Server(server,{cors: {origin: "http://localhost:3000"}})
 
 let onlineUsers: any = []
 
-const addNewUser = (username:any, socketId:any) => {
-  !onlineUsers.some((user:any) => user.username === username) && onlineUsers.push({ username, socketId })
+const addNewUser = (receiverId:any, socketId:any) => {
+  !onlineUsers.some((user:any) => user.receiverId === receiverId) && 
+  onlineUsers.push({ receiverId, socketId })
+  console.log('online users', onlineUsers)
 }
 
 
@@ -84,49 +88,52 @@ const removeUser = (socketId:any) => {
 }
 
 
-const getUser = (username:any) => {
-  return onlineUsers.find((user:any) => user.username === username)
+const getUser = (receiverId:any) => {
+  return onlineUsers.find((user:any) => user.receiverId === receiverId)
 }
 
   io.on("connection",(socket) => {
 
 
       //add new user
-      socket.on("newUser", (username) => {
-        addNewUser(username, socket.id)
+      socket.on("newUser", (receiverId) => {
+        addNewUser(receiverId, socket.id)
       })
       
-      console.log('online users',onlineUsers)
 
 
       //send notifications
-      socket.on("sendNotification", ({ receiverName, type, id }) => {
-        const receiver = getUser(receiverName)
-        console.log(getUser(receiverName))
+      socket.on("sendNotification", ({ receiverId, type, id }) => {
+        const receiver = getUser(receiverId)
+        console.log('Id of the receiver', receiverId)
+        console.log(getUser(receiverId))
 
-        io.to(receiver.socketId).emit("getNotification", {
-            id,
-            type
-        })
+        if(receiver){
+
+          io.to(receiver.socketId).emit("getNotification", {
+              id,
+              type
+          })
+      }
       })
 
       
       //setInterval
-   /*    setInterval(function(){
+       setInterval(function(){
       
-            getcurrentnext1().then((Counter) => {
+        getcurr_next1().then((Counter) => {
                 io.emit('getqueuenum1', Counter)            
             })
   
-            getcurrentnext2().then((Counter) => {
+            getcurr_next2().then((Counter) => {
                 io.emit('getqueuenum2', Counter)            
             })
   
-            getcurrentnext3().then((Counter) => {
+            getcurr_next3().then((Counter) => {
                 io.emit('getqueuenum3', Counter)           
             })
             
-        }, 1000) */
+        }, 1000) 
         
         socket.on('disconnect',()=>{
             removeUser(socket.id);
@@ -137,5 +144,5 @@ const getUser = (username:any) => {
     //server running
     server.listen(8000, ()=>{
       
-      console.log('app running on server 8000')
+      console.log('system running on server 8000')
      })

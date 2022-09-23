@@ -6,10 +6,10 @@ import { loginCuser } from "../controllers/logincontroller"
 
 const router = Router()
 
-//nuser routes
+//normal user login routes
 router.post('/nuser/login',loginNuser) //done 
 
-//cuser routes
+//counter user login routes
 router.post('/cuser/login',loginCuser) //done
 
 export default router;   

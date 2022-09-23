@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.havingissue = exports.getNuser = exports.getNusers = exports.createNuser = void 0;
+exports.issuehave = exports.getNuser = exports.getNusers = exports.createNuser = void 0;
 const index_1 = require("../index");
 const Issue_1 = require("../models/Issue");
 const Nuser_1 = require("../models/Nuser");
@@ -37,41 +37,45 @@ const getNusers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const nusers = yield Nuser_1.Nuser.find();
         res.json(nusers);
+        console.log(req.body.userId);
     }
     catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 exports.getNusers = getNusers;
 const getNuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        console.log(req.body.userId);
         const cuser = yield Nuser_1.Nuser.findOneBy({ id: parseInt(id) });
         res.json(cuser);
-    }
-    catch (error) {
-    }
-});
-exports.getNuser = getNuser;
-const havingissue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id } = req.body.userId;
-        console.log(req.body.userId);
-        let haveIssue;
-        const havingissue = yield index_1.AppDataSource.getRepository(Issue_1.Issue)
-            .createQueryBuilder("issue")
-            .where("nuserId = :nuserId", { nuserId: req.body.userId })
-            .getOne();
-        if (havingissue) {
-            haveIssue = true;
-        }
-        else {
-            haveIssue = false;
-        }
-        res.json({ 'havingIssue': haveIssue });
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-exports.havingissue = havingissue;
+exports.getNuser = getNuser;
+const issuehave = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.body.userId;
+        let haveIssue;
+        const havingissue = yield index_1.AppDataSource.getRepository(Issue_1.Issue)
+            .createQueryBuilder("issue")
+            .where("nuserId = :nuserId", { nuserId: req.body.userId })
+            .andWhere("isDone = 0")
+            .getOne();
+        if (havingissue) {
+            haveIssue = 1;
+        }
+        else {
+            haveIssue = 0;
+        }
+        res.json({ havingissue: haveIssue });
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.issuehave = issuehave;
 //# sourceMappingURL=nusercontroller.js.map

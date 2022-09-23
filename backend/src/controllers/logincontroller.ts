@@ -10,7 +10,7 @@ import { AppDataSource } from "../index"
 //login Nuser
 export const loginNuser = async (req:Request,res:Response) => {
     try{
-        const{username,password} = req.body
+        const{username,password} = await req.body
         const nuser = await Nuser.findOneBy({username:username})
         if(!nuser) return res.status(400).json('username or password is wrong')
 
@@ -30,19 +30,20 @@ export const loginNuser = async (req:Request,res:Response) => {
         .andWhere("issue.isDone = :isDone",{ isDone: false })
         .getRawOne()
 
-        console.log(issue)
+      
+
         if(issue){
             const counter=issue.issue_counterId
             const queue_num= issue.issue_counterId
 
-            console.log(queue_num)
+           // console.log(queue_num)
             
             res.cookie('jwt',token,{httpOnly:true, maxAge: 3 * 24 * 60 * 60 * 1000 })
-            return res.json({'accessToken':token, 'counter' :issue.issue_counterId,'queue_num' :issue.issue_queueNo})
+            return res.json({'accessToken':token,'roleType':'normalUser', 'counter' :issue.issue_counterId,'queue_num' :issue.issue_queueNo,'userID' :nuser.id})
 
         }
         res.cookie('jwt', token, {httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000})
-        return res.json({'accessToken':token})
+        return res.json({'accessToken':token,'roleType':'normalUser','userID' :nuser.id}) //check
 
     }catch (error) {
         return res.status(500).json ({
@@ -80,7 +81,7 @@ export const loginCuser = async (req:Request,res:Response) => {
             .where("counter.isOnline = :online", {online: 0 })
             .getOne()
 
-            if(!newcounter) return res.json({'message': 'no counter available'})
+            if(!newcounter) return res.status(501).json({'message': 'no counters available'})
 
             const updateCounter = await AppDataSource
             .createQueryBuilder()
@@ -100,7 +101,7 @@ export const loginCuser = async (req:Request,res:Response) => {
 
             req.body.counterId = newcounter.id //check counteeId
 
-        return res.json({'accessToken':token,'counterinfo': newcounter})
+        return res.json({'accessToken':token,'roleType':'counterUser','counterinfo': newcounter})
             
         }else{
             
@@ -114,13 +115,15 @@ export const loginCuser = async (req:Request,res:Response) => {
             .where("id = :counter", {counter: counterinfo.id})
             .execute()
 
+            counterinfo.isOnline= true
+
             const token= jwt.sign({id :cuser.id }, process.env.TOKEN_SECRET|| 'tokentest')
 
             res.cookie('jwt', token, {httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000})
 
             req.body.counterId = counterinfo.id
 
-            return res.json({'accessToken':token,'counterinfo':counterinfo})
+            return res.json({'accessToken':token,'roleType':'counterUser','counterinfo':counterinfo})
 
         }
        

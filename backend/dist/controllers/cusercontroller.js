@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getcurrentnext3 = exports.getcurrentnext2 = exports.getcurrentnext1 = exports.counterclose = exports.deleteCusers = exports.updateCusers = exports.getCuser = exports.getCusers = exports.createCuser = void 0;
+exports.getcurr_next3 = exports.getcurr_next2 = exports.getcurr_next1 = exports.closecounter = exports.deleteCusers = exports.updateCusers = exports.getCuser = exports.getCusers = exports.createCuser = void 0;
 const index_1 = require("../index");
 const Cuser_1 = require("../models/Cuser");
 const Issue_1 = require("../models/Issue");
@@ -82,7 +82,7 @@ const deleteCusers = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.deleteCusers = deleteCusers;
-const counterclose = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const closecounter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cuserIdentify = req.body.userId;
         const skipcounter = yield index_1.AppDataSource.getRepository(Counter_1.Counter)
@@ -158,16 +158,14 @@ const counterclose = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 .where("issue.id = :isId", { isId: issueIdentity })
                 .execute();
         }
-        res.cookie('jwt', '', { maxAge: 1 });
-        req.body.userId = null;
-        return res.json({ message: "Counter closed" });
+        return res.json({ message: "closed" });
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.counterclose = counterclose;
-const getcurrentnext1 = () => __awaiter(void 0, void 0, void 0, function* () {
+exports.closecounter = closecounter;
+const getcurr_next1 = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const issueRepository = yield index_1.AppDataSource.getRepository(Counter_1.Counter)
             .createQueryBuilder("counter")
@@ -179,8 +177,8 @@ const getcurrentnext1 = () => __awaiter(void 0, void 0, void 0, function* () {
         return [];
     }
 });
-exports.getcurrentnext1 = getcurrentnext1;
-const getcurrentnext2 = () => __awaiter(void 0, void 0, void 0, function* () {
+exports.getcurr_next1 = getcurr_next1;
+const getcurr_next2 = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const issueRepository = yield index_1.AppDataSource.getRepository(Counter_1.Counter)
             .createQueryBuilder("counter")
@@ -192,8 +190,8 @@ const getcurrentnext2 = () => __awaiter(void 0, void 0, void 0, function* () {
         return [];
     }
 });
-exports.getcurrentnext2 = getcurrentnext2;
-const getcurrentnext3 = () => __awaiter(void 0, void 0, void 0, function* () {
+exports.getcurr_next2 = getcurr_next2;
+const getcurr_next3 = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const issueRepository = yield index_1.AppDataSource.getRepository(Counter_1.Counter)
             .createQueryBuilder("counter")
@@ -205,5 +203,5 @@ const getcurrentnext3 = () => __awaiter(void 0, void 0, void 0, function* () {
         return [];
     }
 });
-exports.getcurrentnext3 = getcurrentnext3;
+exports.getcurr_next3 = getcurr_next3;
 //# sourceMappingURL=cusercontroller.js.map

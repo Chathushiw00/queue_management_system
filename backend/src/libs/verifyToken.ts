@@ -7,11 +7,11 @@ interface IPayload {
 
 export const ValidateToken =(req:Request,res:Response,next:NextFunction) => {
 
-    const accToken = req.cookies.jwt
+   // const accToken = req.cookies.jwt
     const authHeader =req.headers['authorization']
     const token =authHeader && authHeader.split(' ')[1]
 
-    if(accToken != token) return res.status(403).send({ message : 'Invalid Access Token' })
+    //if(accToken != token) return res.status(403).send({ message : 'Invalid Access Token' })
     
     if(!token) return res.status(401).json('Access denied')
 

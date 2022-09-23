@@ -1,0 +1,70 @@
+/*login,cuserlogin css*/
+
+.main {
+    text-align: center;
+    justify-content: center;
+    display: flex; 
+    padding-top: 100px;
+    padding-bottom: 124px;
+    background-color: #d8ddf0;
+  }
+  .sub-main {
+    display: flex;
+    justify-content: center;
+    height: 400px;
+    width: 23%;
+    box-shadow: 11px 12px 13px 12px rgb(207, 207, 207);
+    padding-top: 15px;
+    border-radius: 60px; 
+    background-color: white;
+   
+  }
+  
+  input{
+      width: 200px;
+      height: 40px;
+      border-radius: 60px;
+      box-shadow: inset 0px 0px 25px 0px #888;
+      border: none;
+      outline: none;
+      justify-content: center;
+      
+  }
+  
+  button{
+      width: 100px;
+      height: 40px;
+      border-radius: 60px;
+      background-color: blue;
+      color: white;
+      font-size: 25px;
+      border: none;
+
+  }
+
+  
+  p{
+    color: red;
+      font-size: 20px;
+  }
+  
+   a{
+       color: blue;
+   }
+
+   #log-in-form{
+    max-width: 300px;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    font-size: 0.85em;
+    justify-content: center;
+    font-family: "CustomFont";
+    position: relative;
+    border-radius: 1em;
+    background-position: center;
+}
+/*login,cuserlogin css*/
+
+
+

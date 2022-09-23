@@ -3,8 +3,6 @@ import { AppDataSource } from "../index"
 import { Issue } from "../models/Issue"
 import { Nuser } from "../models/Nuser"
 import jwt, { JsonWebTokenError } from "jsonwebtoken"
-import { Counter } from "../models/Counter"
-
 
 
 export const createNuser = async (req:Request,res:Response) => {
@@ -34,9 +32,9 @@ export const getNusers = async (req:Request,res:Response) => {
     try{
         const nusers = await Nuser.find()
         res.json(nusers)
-        //console.log(req.body.userId);
+        console.log(req.body.userId);
     }catch (error) {
-        //res.status(500).json({message:error.message})
+        res.status(500).json({message:error.message})
     }
 }
 
@@ -44,35 +42,37 @@ export const getNuser = async (req:Request,res:Response) => {
 
     try{
         const {id} =req.params
-        //console.log(req.body.userId);
+        console.log(req.body.userId);
         const cuser = await Nuser.findOneBy({id: parseInt(id)})
         res.json(cuser)
     }catch (error) {
 
-        //res.status(500).json({message:error.message})
+        res.status(500).json({message:error.message})
     }
 } 
 
-export const havingissue = async (req:Request,res:Response) => {
+
+export const issuehave = async (req:Request,res:Response)=> {
     try{
         const {id} = req.body.userId
-        console.log(req.body.userId) //print logged nuserid in console
+       
         let haveIssue
         const havingissue = await AppDataSource.getRepository(Issue)
 
         .createQueryBuilder("issue")
         .where("nuserId = :nuserId", { nuserId: req.body.userId }) //check issue table nuserId
+        .andWhere("isDone = 0")
         .getOne()
        // res.json(havingissue.nuser_havingissue)
 
        if(havingissue){
-        haveIssue = true
+        haveIssue = 1
        }
        else{
-        haveIssue = false
+        haveIssue = 0
        }
 
-       res.json({'havingIssue': haveIssue})
+       res.json({havingissue: haveIssue})
 
     }catch (error) {
         res.status(500).json({message:error.message})

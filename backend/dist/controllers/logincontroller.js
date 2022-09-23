@@ -21,7 +21,7 @@ const Issue_1 = require("../models/Issue");
 const index_1 = require("../index");
 const loginNuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { username, password } = req.body;
+        const { username, password } = yield req.body;
         const nuser = yield Nuser_1.Nuser.findOneBy({ username: username });
         if (!nuser)
             return res.status(400).json('username or password is wrong');
@@ -34,16 +34,14 @@ const loginNuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             .where("issue.nuser = :nuser", { nuser: nuser.id })
             .andWhere("issue.isDone = :isDone", { isDone: false })
             .getRawOne();
-        console.log(issue);
         if (issue) {
             const counter = issue.issue_counterId;
             const queue_num = issue.issue_counterId;
-            console.log(queue_num);
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
-            return res.json({ 'accessToken': token, 'counter': issue.issue_counterId, 'queue_num': issue.issue_queueNo });
+            return res.json({ 'accessToken': token, 'roleType': 'normalUser', 'counter': issue.issue_counterId, 'queue_num': issue.issue_queueNo, 'userID': nuser.id });
         }
         res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
-        return res.json({ 'accessToken': token });
+        return res.json({ 'accessToken': token, 'roleType': 'normalUser', 'userID': nuser.id });
     }
     catch (error) {
         return res.status(500).json({
@@ -72,7 +70,7 @@ const loginCuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 .where("counter.isOnline = :online", { online: 0 })
                 .getOne();
             if (!newcounter)
-                return res.json({ 'message': 'no counter available' });
+                return res.status(501).json({ 'message': 'no counters available' });
             const updateCounter = yield index_1.AppDataSource
                 .createQueryBuilder()
                 .update(Counter_1.Counter)
@@ -86,7 +84,7 @@ const loginCuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             const token = jsonwebtoken_1.default.sign({ id: cuser.id }, process.env.TOKEN_SECRECT || 'tokentest');
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
             req.body.counterId = newcounter.id;
-            return res.json({ 'accessToken': token, 'counterinfo': newcounter });
+            return res.json({ 'accessToken': token, 'roleType': 'counterUser', 'counterinfo': newcounter });
         }
         else {
             const updateCounter = yield index_1.AppDataSource
@@ -98,10 +96,11 @@ const loginCuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             })
                 .where("id = :counter", { counter: counterinfo.id })
                 .execute();
+            counterinfo.isOnline = true;
             const token = jsonwebtoken_1.default.sign({ id: cuser.id }, process.env.TOKEN_SECRET || 'tokentest');
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
             req.body.counterId = counterinfo.id;
-            return res.json({ 'accessToken': token, 'counterinfo': counterinfo });
+            return res.json({ 'accessToken': token, 'roleType': 'counterUser', 'counterinfo': counterinfo });
         }
     }
     catch (error) {

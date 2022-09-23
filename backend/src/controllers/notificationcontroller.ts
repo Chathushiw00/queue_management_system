@@ -4,6 +4,7 @@ import { Issue } from "../models/Issue"
 import { Notification } from "../models/Notification"
 
 
+
 export class NotificationY {
     async handle(req:Request,res:Response){
        
@@ -13,6 +14,7 @@ export class NotificationY {
   } 
 
 
+
 export const getNotifications = async (req:Request, res:Response) => {
 
     try{
@@ -20,22 +22,21 @@ export const getNotifications = async (req:Request, res:Response) => {
         const currentIssue = await AppDataSource.getRepository(Issue)
         .createQueryBuilder("issue")
         .where("issue.nuser = :nuser",{nuser: req.body.userId})
-        .andWhere("issue.isDone = :done",{done : 0})
+        .andWhere("issue.isCalled = :called", {called : true}) //night
+        .andWhere("issue.isDone = :done",{done : false})
         .getOne()
 
         //console.log(currentIssue)
         const notificationRepository = await AppDataSource.getRepository(Notification)
         .createQueryBuilder("notification")
+        .loadAllRelationIds()
         .where("notification.nuser = :nuser", { nuser: req.body.userId })
-        .where("notification.issue = :issue", { issue: currentIssue?.id})
+        .where("notification.issue = :issue", { issue: currentIssue?.id})  //check issueId or issue 
         .orderBy("notification.id", "DESC")
         .getManyAndCount()
 
-        //console.log(notificationRepository)
 
-        res.json({
-            notifications: notificationRepository
-        })
+        res.json(notificationRepository)
 
     }catch (error) {
 

@@ -5,16 +5,6 @@ import { AppDataSource } from "../index"
 import { Counter } from '../models/Counter'
 
 
-  
-    //   const xwer = "select * from user";
-
-    //   const { sum } = await getRepository(User)
-    // .createQueryBuilder("user")
-    // .select("SUM(user.nuser)", "sum")
-    // .where("user.id = :id", { id: 1 })
-    // .getRawOne();
-
-    // console.log(sum);
 
 
   //#id  //QueueId CountID
@@ -62,7 +52,8 @@ console.log("****Count_Id",Countersum);
 // const counter_nubbb = parseInt(counter_nubb);
 
 
-export const genarateQueueNum = async ( req:Request, res:Response, next:NextFunction) => {
+
+export const Getqueue = async ( req:Request, res:Response, next:NextFunction) => {
 
     try{
         const countissue:number[]=[];
@@ -127,7 +118,7 @@ export const genarateQueueNum = async ( req:Request, res:Response, next:NextFunc
                     freequeue=3
                 } 
 
-                //console.log(freequeue)
+              
 
             const issueRepository = await AppDataSource.getRepository(Issue)
 
@@ -144,7 +135,7 @@ export const genarateQueueNum = async ( req:Request, res:Response, next:NextFunc
                 issueRepository.max+=1;
             }
 
-            //res.json(issueRepository.max)
+           
             req.body.queueNo=issueRepository.max  
             req.body.counter= freequeue
 

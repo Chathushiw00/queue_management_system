@@ -4,11 +4,11 @@ const express_1 = require("express");
 const issuecontroller_1 = require("../controllers/issuecontroller");
 const cusercontroller_1 = require("../controllers/cusercontroller");
 const router = (0, express_1.Router)();
-router.get('/getcounterissues', issuecontroller_1.getcounterissues);
+router.get('/getcounterissues', issuecontroller_1.issuesgetcounter);
 router.put('/issuecalled/:id', issuecontroller_1.issuecalled);
 router.get('/issue/:id', issuecontroller_1.getsingleissue);
 router.get('/issuedone/:id', issuecontroller_1.issuedone);
 router.put('/getDoneNextissue/:id', issuecontroller_1.getDoneNextissue);
-router.get('/counterclose', cusercontroller_1.counterclose);
+router.get('/counterclose', cusercontroller_1.closecounter);
 exports.default = router;
 //# sourceMappingURL=CuserRoutes.js.map

@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.genarateQueueNum = void 0;
+exports.Getqueue = void 0;
 const Issue_1 = require("../models/Issue");
 const index_1 = require("../index");
 const Counter_1 = require("../models/Counter");
-const genarateQueueNum = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const Getqueue = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const countissue = [];
         for (let i = 1; i <= 3; i++) {
@@ -75,5 +75,5 @@ const genarateQueueNum = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         return res.status(500).json({ message: error.message });
     }
 });
-exports.genarateQueueNum = genarateQueueNum;
-//# sourceMappingURL=QueueGenerate.js.map
+exports.Getqueue = Getqueue;
+//# sourceMappingURL=Getqueue.js.map

@@ -26,17 +26,17 @@ const getNotifications = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const currentIssue = yield index_1.AppDataSource.getRepository(Issue_1.Issue)
             .createQueryBuilder("issue")
             .where("issue.nuser = :nuser", { nuser: req.body.userId })
-            .andWhere("issue.isDone = :done", { done: 0 })
+            .andWhere("issue.isCalled = :called", { called: true })
+            .andWhere("issue.isDone = :done", { done: false })
             .getOne();
         const notificationRepository = yield index_1.AppDataSource.getRepository(Notification_1.Notification)
             .createQueryBuilder("notification")
+            .loadAllRelationIds()
             .where("notification.nuser = :nuser", { nuser: req.body.userId })
             .where("notification.issue = :issue", { issue: currentIssue === null || currentIssue === void 0 ? void 0 : currentIssue.id })
             .orderBy("notification.id", "DESC")
             .getManyAndCount();
-        res.json({
-            notifications: notificationRepository
-        });
+        res.json(notificationRepository);
     }
     catch (error) {
         res.status(500).json({ message: error.message });

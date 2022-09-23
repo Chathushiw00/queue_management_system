@@ -3,12 +3,10 @@ import { AppDataSource } from "../index"
 import { Cuser } from "../models/Cuser"
 import { Issue } from "../models/Issue"
 import { Counter } from "../models/Counter"
-import { getNodeMajorVersion } from "typescript"
 import jwt from "jsonwebtoken";
 
 
-
- export const createCuser = async (req:Request,res:Response) => {
+export const createCuser = async (req:Request,res:Response) => {
 
     try{
         const{username,password} =req.body
@@ -90,8 +88,7 @@ export const deleteCusers = async (req:Request,res:Response) => {
 } 
 
 
-
-export const counterclose =async (req:Request,res:Response) =>{
+export const closecounter =async (req:Request,res:Response) =>{
     
     try {
      
@@ -195,10 +192,10 @@ export const counterclose =async (req:Request,res:Response) =>{
             .execute()
         }
 
-        res.cookie('jwt','',{maxAge: 1})
-        req.body.userId = null
+        // res.cookie('jwt','',{maxAge: 1})
+        // req.body.userId = null
 
-        return res.json({message:"Counter closed"})
+        return res.json({message:"closed"})
      
 
          } catch (error) {
@@ -208,7 +205,7 @@ export const counterclose =async (req:Request,res:Response) =>{
  }
 
 
-export const getcurrentnext1 = async (): Promise<Counter[]> =>{
+export const getcurr_next1 = async (): Promise<Counter[]> =>{
 
     try{
 
@@ -229,7 +226,7 @@ export const getcurrentnext1 = async (): Promise<Counter[]> =>{
 }
 
 
-export const getcurrentnext2 = async (): Promise<Counter[]> =>{
+export const getcurr_next2 = async (): Promise<Counter[]> =>{
 
     try{
 
@@ -249,7 +246,7 @@ export const getcurrentnext2 = async (): Promise<Counter[]> =>{
   
 }
 
-export const getcurrentnext3 = async (): Promise<Counter[]> =>{
+export const getcurr_next3 = async (): Promise<Counter[]> =>{
 
     try{
 
