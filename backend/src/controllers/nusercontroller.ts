@@ -60,6 +60,7 @@ export const issuehave = async (req:Request,res:Response)=> {
         const havingissue = await AppDataSource.getRepository(Issue)
 
         .createQueryBuilder("issue")
+        .loadAllRelationIds()
         .where("nuserId = :nuserId", { nuserId: req.body.userId }) //check issue table nuserId
         .andWhere("isDone = 0")
         .getOne()
@@ -72,7 +73,7 @@ export const issuehave = async (req:Request,res:Response)=> {
         haveIssue = 0
        }
 
-       res.json({havingissue: haveIssue})
+       res.json({havingissue: haveIssue,issue:havingissue})
 
     }catch (error) {
         res.status(500).json({message:error.message})

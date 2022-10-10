@@ -96,16 +96,28 @@ export const closecounter =async (req:Request,res:Response) =>{
 
         const skipcounter = await AppDataSource.getRepository(Counter)
         .createQueryBuilder("counter")
-        .where("counter.cuser = :cuser", { cuser: cuserIdentify })
+        .where("counter.id = :cuser", { cuser: cuserIdentify })
         .getOne()
 
        
-        const counterRepository = await AppDataSource.getRepository(Counter) 
+        const onlineAvailable = await AppDataSource.getRepository(Counter) 
         .createQueryBuilder("counter")
-        .update(Counter)
-        .set({ isOnline: false })
-        .where("cuser = :cuser", { cuser: cuserIdentify }) //try with counter.userId = :cuser aswell
-        .execute()
+        .select("COUNT(counter.id)","count")
+        .where("isOnline = :online", { online: true }) //try with counter.userId = :cuser aswell
+        .getRawOne()
+
+        console.log(onlineAvailable.count)
+
+        if(onlineAvailable.count>1){
+            const counterRepository = await AppDataSource.getRepository(Counter)     
+            .createQueryBuilder("counter")
+            .update(Counter)
+            .set({ isOnline: false })
+            .where("counter.id = :cuser", { cuser: cuserIdentify })
+            .execute()
+        }else{
+            return  res.status(500).json({message:'No counter available'})
+        }
 
         let countissue: number[] =[]
         

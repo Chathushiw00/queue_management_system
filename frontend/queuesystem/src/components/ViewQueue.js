@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react'
 import { Col, Container,Row,Badge,Card,Button,Modal} from 'react-bootstrap'
 import { FaBell } from "react-icons/fa";
 import useAuth from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import axios ,{BASE_URL}from '../api/axios';
 import Socket from './Socket';
 import '../styles/App.css';
@@ -19,6 +19,7 @@ export default function Viewqueue(props) {
     const [queue_num,setQueuenum]=useState('')
     const [username,setUsername]=useState('')
     const [show,setShow]=useState(false)
+    const navigate = useNavigate()
  
 
     const Token=auth?.accessToken
@@ -34,19 +35,28 @@ export default function Viewqueue(props) {
       setShow(false)
     }
 
+    // useEffect(()=> {
+
+    //   if(auth){
+    //       if(auth.userType!="normalUser"){
+    //           navigate("/counter")
+    //       }
+    //   }
+    // },[])
+
+
     useEffect(() =>{
       setUsername(auth?.username)
      
-     if(auth?.counter==undefined ||auth?.queue_num==undefined)
-     {
-      setCounter(props.counter)
-      setQueuenum(props.queue_num)
-     }
-     else{
-      setCounter(auth?.counter)
-      setQueuenum(auth?.queue_num)
-     }
-
+      if(auth?.counter==undefined ||auth?.queue_num==undefined)
+      {
+       setCounter(props.counter)
+       setQueuenum(props.queue_num)
+      }
+      else{
+       setCounter(auth?.counter)
+       setQueuenum(auth?.queue_num)
+      }
       
      Socket.off("getNotification").on("getNotification", (data) => { 
     
@@ -102,6 +112,11 @@ export default function Viewqueue(props) {
 
           localStorage.clear();
           setAuth();
+          navigate("/nuser")
+
+          // localStorage.removeItem(auth?.username)
+          // sessionStorage.clear()
+          // setAuth();
         } 
        catch (error) {
               console.log(error);         
@@ -115,6 +130,10 @@ export default function Viewqueue(props) {
          
           if(res.data.message==="deleted")
           {
+            Socket.emit("refreshIssues", {
+              ref:1
+            });
+
             window.location.reload()
           }
          
@@ -167,32 +186,7 @@ export default function Viewqueue(props) {
    </Card>
               </Col>
           </Row>
-          <Row>
-<Col>
-
-  
-  <Button id='cancelbtn' variant="danger"
-    onClick={() => setShow(true)}
-  >Cancel</Button>
-
-     </Col> 
-     </Row>
-      </Container>
-      <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Cancel Issue</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>Do you want to cancel the issue?</Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          No
-        </Button>
-        <Button variant="primary" onClick={cancel}>
-          Yes
-        </Button>
-      </Modal.Footer>
-    </Modal> 
-
+         </Container>
       <ToastContainer          
           position="bottom-right"
           autoClose={5000}

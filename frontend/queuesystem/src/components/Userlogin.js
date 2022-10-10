@@ -1,7 +1,6 @@
 
 import React,{useRef,useState,useEffect} from 'react'
 import axios from '../api/axios'
-//import '../styles/custom.css'
 import '../styles/login.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Form,Button, Container} from 'react-bootstrap'
@@ -13,10 +12,11 @@ const LOGIN_URL = '/nuser/login' //postman url
 
 export default function UserLogin() {
 
-    const { setAuth } = useAuth()
+    const {auth,setAuth } = useAuth()
     const navigate = useNavigate()
     const location =useLocation() //where used it check
     const from = "/issueinput" //after login redirect to issueinput page
+   // const from2 = "/counter"
   
     const userRef =useRef('')
     const errRef = useRef()
@@ -25,8 +25,11 @@ export default function UserLogin() {
     const [password,setPassword] =useState('')
     const [errMsg,setErrMsg] =useState('')
 
+    //const userType ="normalUser"
+
     useEffect(()=> {
         userRef.current.focus()
+        
       },[])
       
       useEffect(()=>{
@@ -56,11 +59,13 @@ export default function UserLogin() {
                 console.log(receiverId);
 
       
+                //sessionStorage.setItem('user',JSON.stringify({ username,accessToken,counter,queue_num,userType }))
                 localStorage.setItem('user',JSON.stringify({ username,accessToken,counter,queue_num}))
                 console.log(JSON.stringify({ username,accessToken,counter,queue_num}))
 
                 Socket.emit("newUser", receiverId)
                 console.log(Socket)
+                //console.log(userType)
                 
                 setAuth({username,accessToken,counter,queue_num})
                 console.log(accessToken)

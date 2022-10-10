@@ -14,7 +14,7 @@ export default function Notifications() {
     const navigate = useNavigate();
     const [notifications, setNotifications] = useState([]);
     const [username,setUsername]=useState('')
-    const [nullvalue,setNull]=useState(false)  //night
+    const [nullvalue,setNull]=useState(false) 
 
 
     const Token=auth?.accessToken
@@ -26,6 +26,15 @@ export default function Notifications() {
       }
     })
 
+
+    // useEffect(()=> {
+
+    //   if(auth){
+    //       if(auth.userType!="normalUser"){
+    //           navigate("/counter")
+    //       }
+    //   }
+    // },[])
    
     useEffect(() => {
 
@@ -67,6 +76,9 @@ export default function Notifications() {
 
           localStorage.clear();
           setAuth();
+          navigate("/nuser")
+          // localStorage.removeItem(auth?.username)
+          // sessionStorage.clear()
         } 
        catch (error) {
               console.log(error);         

@@ -6,6 +6,7 @@ import useAuth from "../hooks/useAuth";
 import axios ,{BASE_URL}from '../api/axios';
 import ViewQueue from './ViewQueue';
 import { useNavigate} from 'react-router-dom';
+import Socket from './Socket';
 
 
 export default function IssueInput() {
@@ -45,6 +46,9 @@ export default function IssueInput() {
         }
         else{
           SetSendissue(true)
+          setCounter(res.data.issue.counter)
+          setQueuenum(res.data.issue.queueNo)
+          console.log(queuenum)
         }
         
        setUsername(auth?.username)
@@ -56,24 +60,45 @@ export default function IssueInput() {
 
     fetchuser();
   },[])
+
+  Socket.off("refreshDis").on("refreshDis", (data) => {
+    const refresh = data.ref
+    if(refresh==1)
+    {
+      window.location.reload()
+    }
+})
  
 
   const logout = async () => {
     try {
 
-      localStorage.clear();
+      //localStorage.clear();
+      sessionStorage.clear();
+      localStorage.removeItem(auth?.username);
       setAuth();
+      navigate("/nuser")
     } 
    catch (error) {
           console.log(error);         
    }
   }
 
+  // useEffect(()=> {
+
+  //   if(auth){
+  //       if(auth.userType!="normalUser"){
+  //           navigate("/counter")
+  //       }
+  //   }
+  // },[])
+
   useEffect(()=>{
 
-    const data =JSON.parse(localStorage.getItem('user'))
-         
-    setAuth(data)
+    const data =JSON.parse(localStorage.getItem(auth?.username))
+    if(data){
+      setAuth(data)
+    }
   },[])
    
 
@@ -92,7 +117,7 @@ export default function IssueInput() {
           
           );
 
-          setEmail('')
+          setEmail('username')
           setIssue('')
           setName('')
           setContact('')
@@ -101,6 +126,10 @@ export default function IssueInput() {
           setQueuenum(res.data.queueNo)
           //navigate("/queuedisplay")
           SetSendissue(true)
+
+          Socket.emit("refreshIssues", {
+            ref:1
+          });
 
   } catch (error) {
     console.log(error);
@@ -153,7 +182,7 @@ export default function IssueInput() {
   <Form.Group className="mb-3" controlId="formEmail">
     <Form.Control type="email" size="lg" placeholder="Enter Email"
      onChange={(e) => setEmail(e.target.value)}
-     value={email}
+     value={username}
      required />
    
   </Form.Group>

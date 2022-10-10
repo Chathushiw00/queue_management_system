@@ -29,6 +29,16 @@ const Counterview=(props)=> {
         }
       })
 
+      // useEffect(()=> {
+
+      //   if(auth){
+      //       if(auth.userType!="counterUser"){
+      //           navigate("/issueinput")
+      //       }
+      //   }
+      // },[])
+
+
       useEffect(() => {
 
         const fetchIssue = async () => {

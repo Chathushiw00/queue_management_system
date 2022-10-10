@@ -12,10 +12,11 @@ const LOGIN_URL = '/cuser/login' //postman url
 
 export default function CuserLogin() {
 
-    const { setAuth } = useAuth()
+    const {auth,setAuth } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
     const from2 = "/counter"
+    //const from = "/issueinput"
 
     const userRef = useRef('')
     const errRef = useRef()
@@ -24,8 +25,11 @@ export default function CuserLogin() {
     const [password,setPassword] =useState('')
     const [errMsg,setErrMsg] =useState('')
 
+     //const userType ="counterUser"
+
     useEffect(()=> {
         userRef.current.focus()
+       
     },[])
 
     useEffect(()=>{
@@ -49,9 +53,14 @@ export default function CuserLogin() {
      
            
                 const counterInfo =  response?.data?.counterinfo
+                const receiverId =(response?.data?.userID)
       
-                localStorage.setItem('user',JSON.stringify({ username,accessToken,counterInfo }))
+                sessionStorage.setItem('user',JSON.stringify({ username,accessToken,counterInfo}))
+                //localStorage.setItem('user',JSON.stringify({ username,accessToken,counterInfo }))
                 console.log(JSON.stringify({ username,accessToken,counterInfo }))
+
+                // Socket.emit("newUser", receiverId)
+                // console.log(Socket)
 
                 setAuth({ username,accessToken,counterInfo })
                 setUsername('')

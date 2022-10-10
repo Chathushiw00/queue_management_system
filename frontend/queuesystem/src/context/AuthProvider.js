@@ -5,13 +5,13 @@ const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
    
     const [auth, setAuth] = useState(()=>
-        JSON.parse(localStorage.getItem('user')))
+        JSON.parse(sessionStorage.getItem('user')))
   
     useEffect(()=>{
       if(auth==undefined)
       { }
       else{
-        localStorage.setItem('user',JSON.stringify(auth))
+        sessionStorage.setItem('user',JSON.stringify(auth))
       }
    
       },[auth])

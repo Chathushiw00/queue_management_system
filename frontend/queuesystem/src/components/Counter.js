@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/App.css';
-import {Badge,Button,Row,Col,Card,Container} from 'react-bootstrap';
+import {Badge,Button,Row,Col,Card,Container,Modal} from 'react-bootstrap';
 import useAuth from '../hooks/useAuth';
 import axios,{BASE_URL} from '../api/axios';
 import Issuetag from './IssueTag';
+import { useNavigate} from 'react-router-dom';
 import Socket from './Socket';
 
 
@@ -20,6 +21,8 @@ export default function Counter(props) {
     const [counter,setCounter]=useState(true)
     const [page,setPage]=useState(1)
     const [lp,setLP]=useState()
+    const [show,setShow]=useState(false)
+    const navigate = useNavigate();
 
     const { setAuth } = useAuth();
     const Token=auth?.accessToken
@@ -34,8 +37,9 @@ export default function Counter(props) {
     const viewIssueHandler = async(id,queueNo,uid) => {
         try {
           const res = await authAxios.put(`cuser/issuecalled/${id}`); //postman url
-         console.log(uid)
-         
+         //console.log(uid)
+         console.log(res)
+
          Socket.emit("sendNotification", {
           receiverId:uid,
           type:'Hello!!, Move on to the Counter '+countnum+' Now! .  Check your Notifications!',
@@ -47,6 +51,15 @@ export default function Counter(props) {
          }
       };
 
+
+      // useEffect(()=> {
+
+      //   if(auth){
+      //       if(auth.userType!="counterUser"){
+      //           navigate("/issueinput")
+      //       }
+      //   }
+      // },[])
 
       useEffect(() => {
 
@@ -96,6 +109,15 @@ export default function Counter(props) {
         }
      } 
      
+
+     Socket.off("refresh").on("refresh", (data) => {
+      const refresh = data.ref
+      if(refresh==1)
+      {
+        window.location.reload()
+      }
+  })
+
      
      const nextpage = async ()=>{
 
@@ -111,18 +133,35 @@ export default function Counter(props) {
       }
 
 
+      const handleClose = () =>{
+        setShow(false)
+      }
+    
+
       const closecounter = async () => {
         try {
     
           //call close counter api
         const response = await authAxios.get('cuser/counterclose'); //postman url
         if(response.data.message === "closed"){
-        localStorage.clear();
+        sessionStorage.clear();
         setAuth();
+
+
+        sessionStorage.clear();
+        setAuth();
+        Socket.emit("refreshIssues", {
+          ref:1
+        });
+        Socket.emit("refreshDisplay", {
+          ref:1
+        }); 
+        navigate("/cuser")    
             } 
         }
        catch (error) {
-              console.log(error);         
+              console.log(error); 
+              setShow(true)          
        }
       }
 
@@ -153,6 +192,18 @@ export default function Counter(props) {
       onClick={() => closecounter()}
     >Close Counter</Button>
     </Card.Body>
+
+    <Modal show={show}>
+        <Modal.Header closeButton>
+          <Modal.Title>Can't Close Counter</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>No Online Counters Available !</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleClose}>
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal> 
  
     </Col>
   </Row>

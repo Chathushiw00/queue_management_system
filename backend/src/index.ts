@@ -117,6 +117,17 @@ const getUser = (receiverId:any) => {
       }
       })
 
+      socket.on("refreshIssues",({ref})=>{
+        io.emit("refresh",{
+          ref
+        })
+      })
+
+      socket.on("refreshDisplay",({ref})=>{
+        io.emit("refreshDis",{
+          ref
+        })
+      })
       
       //setInterval
        setInterval(function(){

@@ -101,7 +101,7 @@ export const loginCuser = async (req:Request,res:Response) => {
 
             req.body.counterId = newcounter.id //check counteeId
 
-        return res.json({'accessToken':token,'roleType':'counterUser','counterinfo': newcounter})
+        return res.json({'accessToken':token,'roleType':'counterUser','counterinfo': newcounter,'userID':cuser.id})
             
         }else{
             
@@ -123,7 +123,7 @@ export const loginCuser = async (req:Request,res:Response) => {
 
             req.body.counterId = counterinfo.id
 
-            return res.json({'accessToken':token,'roleType':'counterUser','counterinfo':counterinfo})
+            return res.json({'accessToken':token,'roleType':'counterUser','counterinfo':counterinfo,'userID':cuser.id})
 
         }
        
