@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../styles/App1.css';
 import {Form,Badge,Button,Row,Col,Card} from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'; //check
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 import useAuth from "../hooks/useAuth";
 import axios ,{BASE_URL}from '../api/axios';
 import ViewQueue from './ViewQueue';
@@ -19,7 +19,7 @@ export default function IssueInput() {
   const [issue,setIssue]=useState('')
   const [sendissue,SetSendissue]=useState(false)
   const [counter,setCounter]=useState('')
-  const [queuenum,setQueuenum]=useState('') //check queunum == queueNo
+  const [queuenum,setQueuenum]=useState('') 
   const navigate = useNavigate();
 
 
@@ -40,7 +40,7 @@ export default function IssueInput() {
         const res = await authAxios.get(`nuser/havingissue`) //havingissue==postman url
 
 
-        if(res.data.havingissue==0) //nusercontroller-havingissue-see
+        if(res.data.havingissue==0) 
         {
           SetSendissue(false)
         }
@@ -48,7 +48,7 @@ export default function IssueInput() {
           SetSendissue(true)
           setCounter(res.data.issue.counter)
           setQueuenum(res.data.issue.queueNo)
-          console.log(queuenum)
+          //console.log(queuenum)
         }
         
        setUsername(auth?.username)
@@ -84,14 +84,7 @@ export default function IssueInput() {
    }
   }
 
-  // useEffect(()=> {
-
-  //   if(auth){
-  //       if(auth.userType!="normalUser"){
-  //           navigate("/counter")
-  //       }
-  //   }
-  // },[])
+  
 
   useEffect(()=>{
 
@@ -140,7 +133,7 @@ export default function IssueInput() {
 
   return (
     <div className="issueinput">
-    <div>
+    
         <>{sendissue ? (
                <ViewQueue counter={counter} queue_num={queuenum}/>
             ) : (
@@ -206,7 +199,7 @@ export default function IssueInput() {
        )}
        </>
         </div>
-        </div>
+       
    
   )
 }

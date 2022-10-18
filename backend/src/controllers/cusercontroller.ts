@@ -103,7 +103,7 @@ export const closecounter =async (req:Request,res:Response) =>{
         const onlineAvailable = await AppDataSource.getRepository(Counter) 
         .createQueryBuilder("counter")
         .select("COUNT(counter.id)","count")
-        .where("isOnline = :online", { online: true }) //try with counter.userId = :cuser aswell
+        .where("isOnline = :online", { online: true }) 
         .getRawOne()
 
         console.log(onlineAvailable.count)
@@ -200,7 +200,7 @@ export const closecounter =async (req:Request,res:Response) =>{
             .createQueryBuilder("issue")
             .update(Issue)
             .set({queueNo: issueRepository.max, counter: freeCounter! })
-            .where("issue.id = :isId",{isId : issueIdentity}) //ask
+            .where("issue.id = :isId",{isId : issueIdentity}) 
             .execute()
         }
 

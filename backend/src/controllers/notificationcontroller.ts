@@ -22,7 +22,7 @@ export const getNotifications = async (req:Request, res:Response) => {
         const currentIssue = await AppDataSource.getRepository(Issue)
         .createQueryBuilder("issue")
         .where("issue.nuser = :nuser",{nuser: req.body.userId})
-        .andWhere("issue.isCalled = :called", {called : true}) //night
+        .andWhere("issue.isCalled = :called", {called : true}) 
         .andWhere("issue.isDone = :done",{done : false})
         .getOne()
 
@@ -31,7 +31,7 @@ export const getNotifications = async (req:Request, res:Response) => {
         .createQueryBuilder("notification")
         .loadAllRelationIds()
         .where("notification.nuser = :nuser", { nuser: req.body.userId })
-        .where("notification.issue = :issue", { issue: currentIssue?.id})  //check issueId or issue 
+        .where("notification.issue = :issue", { issue: currentIssue?.id})  
         .orderBy("notification.id", "DESC")
         .getManyAndCount()
 

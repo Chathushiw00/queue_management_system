@@ -16,7 +16,7 @@ export default function CuserLogin() {
     const navigate = useNavigate()
     const location = useLocation()
     const from2 = "/counter"
-    //const from = "/issueinput"
+    
 
     const userRef = useRef('')
     const errRef = useRef()
@@ -25,7 +25,7 @@ export default function CuserLogin() {
     const [password,setPassword] =useState('')
     const [errMsg,setErrMsg] =useState('')
 
-     //const userType ="counterUser"
+    
 
     useEffect(()=> {
         userRef.current.focus()

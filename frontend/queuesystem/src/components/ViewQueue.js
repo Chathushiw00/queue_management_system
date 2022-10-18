@@ -35,14 +35,6 @@ export default function Viewqueue(props) {
       setShow(false)
     }
 
-    // useEffect(()=> {
-
-    //   if(auth){
-    //       if(auth.userType!="normalUser"){
-    //           navigate("/counter")
-    //       }
-    //   }
-    // },[])
 
 
     useEffect(() =>{

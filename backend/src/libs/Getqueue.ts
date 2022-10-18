@@ -77,7 +77,7 @@ export const Getqueue = async ( req:Request, res:Response, next:NextFunction) =>
                     const checkissues = await AppDataSource.getRepository(Issue)
                     .createQueryBuilder("issue")
                     .select("COUNT(issue.id)","count")
-                    .where("issue.counter = :counter", { counter: i }) //counter or counterId check db
+                    .where("issue.counter = :counter", { counter: i }) 
                     .andWhere("issue.isDone = :isDone", { isDone: false })
                     .getRawOne()
 

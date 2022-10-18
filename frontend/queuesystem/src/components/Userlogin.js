@@ -14,9 +14,9 @@ export default function UserLogin() {
 
     const {auth,setAuth } = useAuth()
     const navigate = useNavigate()
-    const location =useLocation() //where used it check
+    const location =useLocation() 
     const from = "/issueinput" //after login redirect to issueinput page
-   // const from2 = "/counter"
+   
   
     const userRef =useRef('')
     const errRef = useRef()
@@ -25,7 +25,6 @@ export default function UserLogin() {
     const [password,setPassword] =useState('')
     const [errMsg,setErrMsg] =useState('')
 
-    //const userType ="normalUser"
 
     useEffect(()=> {
         userRef.current.focus()

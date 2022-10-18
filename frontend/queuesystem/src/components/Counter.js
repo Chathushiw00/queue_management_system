@@ -37,8 +37,8 @@ export default function Counter(props) {
     const viewIssueHandler = async(id,queueNo,uid) => {
         try {
           const res = await authAxios.put(`cuser/issuecalled/${id}`); //postman url
-         //console.log(uid)
-         console.log(res)
+         console.log(uid)
+         //console.log(res)
 
          Socket.emit("sendNotification", {
           receiverId:uid,
@@ -50,16 +50,6 @@ export default function Counter(props) {
                 console.log(error);         
          }
       };
-
-
-      // useEffect(()=> {
-
-      //   if(auth){
-      //       if(auth.userType!="counterUser"){
-      //           navigate("/issueinput")
-      //       }
-      //   }
-      // },[])
 
       useEffect(() => {
 

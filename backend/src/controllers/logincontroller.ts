@@ -22,7 +22,7 @@ export const loginNuser = async (req:Request,res:Response) => {
         //res.header('accessToken',token).json(nuser);
 
 
-        //ISSUE INFO
+        //info issue
         const issue = await AppDataSource.getRepository(Issue)
 
         .createQueryBuilder("issue")
@@ -43,7 +43,7 @@ export const loginNuser = async (req:Request,res:Response) => {
 
         }
         res.cookie('jwt', token, {httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000})
-        return res.json({'accessToken':token,'roleType':'normalUser','userID' :nuser.id}) //check
+        return res.json({'accessToken':token,'roleType':'normalUser','userID' :nuser.id})
 
     }catch (error) {
         return res.status(500).json ({
@@ -87,7 +87,7 @@ export const loginCuser = async (req:Request,res:Response) => {
             .createQueryBuilder()
             .update(Counter)
             .set({
-                cuser : cuser, //user or cuser check
+                cuser : cuser, 
                 isOnline : true
                 })
             .where("id = :counter", {counter: newcounter.id})
@@ -99,7 +99,7 @@ export const loginCuser = async (req:Request,res:Response) => {
 
             res.cookie('jwt', token, {httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000})
 
-            req.body.counterId = newcounter.id //check counteeId
+            req.body.counterId = newcounter.id 
 
         return res.json({'accessToken':token,'roleType':'counterUser','counterinfo': newcounter,'userID':cuser.id})
             
@@ -109,7 +109,7 @@ export const loginCuser = async (req:Request,res:Response) => {
             .createQueryBuilder()
             .update(Counter)
             .set({
-                cuser:cuser, //check user or cuser
+                cuser:cuser, 
                 isOnline : true
                 })
             .where("id = :counter", {counter: counterinfo.id})

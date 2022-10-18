@@ -84,7 +84,7 @@ export const getissueQDetails =async (req:Request,res:Response) =>{
 
         console.log(counterDetails)
 
-        if(issueRepository?.queueNo == counterDetails?.next_num) //check both db
+        if(issueRepository?.queueNo == counterDetails?.next_num) 
         {
             res.json({
                 counter_num: counterDetails?.id,
@@ -139,7 +139,7 @@ export const cancelissue1 = async (req:Request,res:Response) => {
 
     try{
 
-        const remNoti = await Notification.delete({nuser: req.body.userId}) //new
+        const remNoti = await Notification.delete({nuser: req.body.userId}) 
 
         const result = await Issue.delete({nuser: req.body.userId})
 
@@ -237,14 +237,14 @@ export const issuecalled = async (req:Request,res:Response) => {
          const callnotify = new Notification()
          callnotify.message = "Hello!!, Move on to the Counter "+issue.counter+" Now!"
          callnotify.issue = issue
-         callnotify.nuser = issue.nuser //check user/nuser
+         callnotify.nuser = issue.nuser 
 
          const savedissue = await callnotify.save()
 
 
          const getNextIssue = await AppDataSource.getRepository(Issue)
          .createQueryBuilder("issue")
-         .where("issue.queueNo > :qN", {qN: issue.queueNo}) //ask
+         .where("issue.queueNo > :qN", {qN: issue.queueNo}) 
          .andWhere("issue.isCalled = :called",{called : false})
          .andWhere("issue.isDone = :done",{done : false})
          .andWhere("issue.counterId = :counter",{counter : issue.counter})
@@ -308,7 +308,7 @@ export const issuedone = async (req:Request,res:Response) => {
             .createQueryBuilder()
             .delete()
             .from(Notification)
-            .where("issueId = :id", {id: id}) //ckeck issueid and id
+            .where("issueId = :id", {id: id}) 
             .execute()
 
 
@@ -319,12 +319,11 @@ export const issuedone = async (req:Request,res:Response) => {
             .where("id = :id", { id: id})
             .execute()
 
-            //update counter next number 2022-9-21 created
 
             const counterRepository = await AppDataSource.getRepository(Counter)
 
             .createQueryBuilder("counter")
-            .where("counter.cuser = :cuser", { cuser: req.body.userId }) //counter.userId or counter.cuser check
+            .where("counter.cuser = :cuser", { cuser: req.body.userId }) 
             .getOne()
     
             console.log(counterRepository)
@@ -448,14 +447,14 @@ export const getDoneNextissue = async (req:Request,res:Response) => {
         .createQueryBuilder()
         .delete()
         .from(Notification)
-        .where("issueId = :id", {id: id}) //ckeck issueid and id
+        .where("issueId = :id", {id: id}) 
         .execute()
 
 
         const counterRepository = await AppDataSource.getRepository(Counter)
 
         .createQueryBuilder("counter")
-        .where("counter.cuser = :cuser", { cuser: req.body.userId }) //counter.userId or counter.cuser check
+        .where("counter.cuser = :cuser", { cuser: req.body.userId }) 
         .getOne()
 
         console.log(counterRepository)
@@ -465,7 +464,7 @@ export const getDoneNextissue = async (req:Request,res:Response) => {
         .createQueryBuilder()
         .update(Issue)
         .set({ isCalled: true })
-        .where("queueNo = :queueNo", { queueNo: counterRepository?.next_num}) //check nextNum or next_num
+        .where("queueNo = :queueNo", { queueNo: counterRepository?.next_num}) 
         .andWhere("counterId = :counter", {counter:counterRepository?.id })
         .execute()
 
@@ -484,7 +483,7 @@ export const getDoneNextissue = async (req:Request,res:Response) => {
         const callnotify = new Notification()
         callnotify.message = "Hello!!, Move on to the Counter"+nextissue.counter+" Now!"
         callnotify.issue = nextissue
-        callnotify.nuser = nextissue.nuser //check user/nuser
+        callnotify.nuser = nextissue.nuser 
 
         const savedissue = await callnotify.save()
         }
@@ -499,7 +498,7 @@ export const getDoneNextissue = async (req:Request,res:Response) => {
         .getRawOne()
 
         let nextnumber=nextnum.min
-        const current = counterRepository?.next_num //check nextNum or next_num
+        const current = counterRepository?.next_num 
 
         if(nextnumber == null){
 

@@ -35,7 +35,7 @@ export const AppDataSource = new DataSource({
     username: "root",
     password: "",
     database: "queuesystem",
-    entities: [Counter,Cuser,Issue,Notification,Nuser], //see the correct entities names
+    entities: [Counter,Cuser,Issue,Notification,Nuser], 
     synchronize: true,
     logging: false,
 })

@@ -61,7 +61,7 @@ export const issuehave = async (req:Request,res:Response)=> {
 
         .createQueryBuilder("issue")
         .loadAllRelationIds()
-        .where("nuserId = :nuserId", { nuserId: req.body.userId }) //check issue table nuserId
+        .where("nuserId = :nuserId", { nuserId: req.body.userId }) 
         .andWhere("isDone = 0")
         .getOne()
        // res.json(havingissue.nuser_havingissue)

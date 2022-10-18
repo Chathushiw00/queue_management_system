@@ -29,16 +29,7 @@ const Counterview=(props)=> {
         }
       })
 
-      // useEffect(()=> {
-
-      //   if(auth){
-      //       if(auth.userType!="counterUser"){
-      //           navigate("/issueinput")
-      //       }
-      //   }
-      // },[])
-
-
+  
       useEffect(() => {
 
         const fetchIssue = async () => {
@@ -52,8 +43,8 @@ const Counterview=(props)=> {
             } 
          
             setCountname(auth?.username)
-            setCountnum(auth?.counterInfo.counter_num) //check counter_num in backend---this correct
-    
+            setCountnum(auth?.counterInfo.counter_num) 
+            
            } catch (error) {
                   console.log(error);         
            }
